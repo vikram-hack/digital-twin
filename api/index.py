@@ -24,3 +24,12 @@ if os.environ.get("VERCEL") or not os.environ.get("DATABASE_URL"):
     os.environ["DATABASE_URL"] = f"sqlite:///{tmp_db}"
 
 from main import app
+from app.database.engine import engine, Base
+from app.database.seed import seed_database
+
+try:
+    Base.metadata.create_all(bind=engine)
+    seed_database()
+except Exception as e:
+    print(f"Warning during DB startup init: {e}")
+
